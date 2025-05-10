@@ -1,0 +1,13 @@
+base64
+io
+pandas
+chardet
+numpy
+matplotlib
+seaborn
+reportlab
+datetime
+pickle
+sklearn
+warnings
+joblib
