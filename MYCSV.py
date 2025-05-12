@@ -27,7 +27,7 @@ def main():
     st.markdown(
         """
         <div style="text-align: center;">
-            <a href="https://www.buymeacoffee.com/yourusername" target="_blank">
+            <a href="https://www.buymeacoffee.com/bhushanyp" target="_blank">
                 <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60" width="217">
             </a>
             <p>Support MYCSV development ☕</p>
