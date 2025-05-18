@@ -79,6 +79,8 @@ st.markdown('<p style="text-align: center; color: #FFFFFF;">Upload your CSV file
 
 st.markdown('<h2 class="tab_title">Generate Reports</h2>', unsafe_allow_html=True)
 uploaded_file_report = st.file_uploader("Choose a CSV file", type=["csv"], key="report")
+
+st.markdown('<h3>Make sure that the target value should be at least column.</h2>', unsafe_allow_html=True)
     
 if uploaded_file_report:
     # Inform the user that the file is being processed
