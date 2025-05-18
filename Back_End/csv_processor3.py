@@ -11,6 +11,9 @@ from sklearn.svm import SVC, SVR
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
 import warnings
+import sys
+import os
+sys.path.append(os.path.dirname(__file__))
 import process
 
 # Suppress warnings for cleaner output
