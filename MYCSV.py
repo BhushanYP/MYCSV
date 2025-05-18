@@ -22,19 +22,6 @@ def main():
     if st.sidebar.button("ℹ️ About"):
         st.switch_page("pages/about.py")  # Assuming the "main" page is your About page
 
-    # Donation Section
-    st.markdown("---")
-    st.markdown(
-        """
-        <div style="text-align: center;">
-            <a href="https://www.buymeacoffee.com/bhushanyp" target="_blank">
-                <img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="60" width="217">
-            </a>
-            <p>Support MYCSV development ☕</p>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
     # About Page
     st.markdown("<h1 style='text-align: center;'>📊 MYCSV - Your Data Processing Hub 🚀</h1>", unsafe_allow_html=True)
 
