@@ -82,19 +82,36 @@ uploaded_file_cleaner = st.file_uploader("Choose a CSV file", type=["csv"], key=
 
 if uploaded_file_cleaner:
     if uploaded_file_cleaner.name.endswith('.csv'):
-        with st.spinner("Processing... ⏳"):
-            processed_output = csv_processor.process_file(uploaded_file_cleaner)
+    # Read CSV without processing to show column selection
+        temp_df = csv_processor.read_csv_with_encoding(uploaded_file_cleaner)
 
-        # Check if the processed output is a StringIO object (the cleaned data)
-        if isinstance(processed_output, io.StringIO):
-            st.success(f"✅ Successfully processed!")
-            st.download_button(
-                label="⬇️ Download Cleaned CSV",
-                data=processed_output.getvalue(),  # Use .getvalue() to extract CSV data
-                file_name="cleaned_data.csv",
-                mime="text/csv"
-            )
+        if isinstance(temp_df, str):
+            st.error(f"❌ Error: {temp_df}")
         else:
-            st.error(f"❌ Error: {processed_output}")
-    else:
-        st.error("❌ Please upload a valid CSV file.")
+            with st.form("column_selection_form"):
+                st.write("### Select Columns to Include in Export and Apply Cleaning")
+                selected_columns = st.multiselect(
+                    "📤 Choose columns to export (they will also be cleaned):",
+                    temp_df.columns.tolist(),
+                    default=temp_df.columns.tolist()
+                )
+                submitted = st.form_submit_button("✅ Clean and Export")
+
+            if submitted:
+                with st.spinner("Processing... ⏳"):
+                    processed_output = csv_processor.process_file(
+                        uploaded_file_cleaner,
+                        columns_to_include=selected_columns,
+                        columns_to_clean=selected_columns
+                    )
+
+                if isinstance(processed_output, io.StringIO):
+                    st.success(f"✅ Successfully processed!")
+                    st.download_button(
+                        label="⬇️ Download Cleaned CSV",
+                        data=processed_output.getvalue(),
+                        file_name="cleaned_data.csv",
+                        mime="text/csv"
+                    )
+                else:
+                    st.error(f"❌ Error: {processed_output}")
