@@ -61,31 +61,30 @@ def normalize_dates(df, column_name):
     except Exception:
         return df
 
-def process_file(file):
-    """Process CSV file from file path or uploaded file object."""
+def process_file(file, columns_to_include=None, columns_to_clean=None):
     df = read_csv_with_encoding(file)
-    
-    if isinstance(df, str):  # If df is a string, it means an error occurred
+    if isinstance(df, str):  # error string
         return df
 
-    # Drop duplicate rows
     df = df.drop_duplicates()
 
-    # Detect and normalize date columns
+    # Limit DataFrame to only selected columns before cleaning
+    if columns_to_include:
+        df = df[[col for col in columns_to_include if col in df.columns]]
+
+    # Determine which of the selected columns are date-like
     date_columns = detect_date_columns(df)
-    for date_column in date_columns:
-        df = normalize_dates(df, date_column)
+    clean_targets = columns_to_clean if columns_to_clean else df.columns
 
-    # Drop columns with more than 40% missing data
-    missing_percentage = df.isnull().mean()
-    df = df.drop(columns=missing_percentage[missing_percentage > 0.4].index)
+    for column in clean_targets:
+        if column not in df.columns:
+            continue
 
-    # Drop rows with excessive missing values
-    if (df.isnull().any(axis=1).sum() / len(df)) * 100 < 10:
-        df = df.dropna()
+        # Normalize date columns
+        if column in date_columns:
+            df = normalize_dates(df, column)
 
-    # Fill missing values: mode for text, median for numbers
-    for column in df.columns:
+        # Fill missing values
         if df[column].dtype == 'object' and not df[column].dropna().empty:
             mode_value = df[column].mode()[0]
             df.loc[1:, column] = df.loc[1:, column].fillna(mode_value)
@@ -93,9 +92,17 @@ def process_file(file):
             median_value = df[column].median()
             df.loc[1:, column] = df.loc[1:, column].fillna(median_value)
 
-    # Convert DataFrame to CSV string (since we can't save to disk in Streamlit)
+    # Drop columns with >40% missing data
+    missing_pct = df.isnull().mean()
+    df = df.drop(columns=missing_pct[missing_pct > 0.4].index)
+
+    # Drop rows if <10% have missing data
+    if (df.isnull().any(axis=1).sum() / len(df)) * 100 < 10:
+        df = df.dropna()
+
+    # Final CSV output
     csv_output = io.StringIO()
     df.to_csv(csv_output, index=False)
-    csv_output.seek(0)  # Move to the start of the StringIO buffer
+    csv_output.seek(0)
 
     return csv_output
