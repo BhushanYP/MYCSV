@@ -2,6 +2,7 @@ import streamlit as st
 import base64
 from Back_End import csv_processor  # Ensure this script exists in the same directory
 import io
+import pandas as pd
 
 # ---- PAGE CONFIG ----
 st.set_page_config(
@@ -106,7 +107,13 @@ if uploaded_file_cleaner:
                     )
 
                 if isinstance(processed_output, io.StringIO):
-                    st.success(f"✅ Successfully processed!")
+                    st.success("✅ Successfully processed!")
+
+                    # Preview cleaned DataFrame
+                    preview_df = pd.read_csv(io.StringIO(processed_output.getvalue()))
+                    st.write("### 👀 Preview of Cleaned CSV:")
+                    st.dataframe(preview_df.head(10), use_container_width=True)  # show first 50 rows
+
                     st.download_button(
                         label="⬇️ Download Cleaned CSV",
                         data=processed_output.getvalue(),
