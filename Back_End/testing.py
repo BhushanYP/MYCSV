@@ -71,7 +71,8 @@ def process_file(file, model):
     if df is None:
         return None, error
     
-    df, df1 = process.process_file(df)
+    df = process.process_file(df)
+    df = df1
 
     df1 = preprocess_data(df1)
 
