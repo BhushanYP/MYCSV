@@ -77,7 +77,9 @@ def process_file(file, model):
 
     model = joblib.load(model)
     predictions = model.predict(df)
-    df = pd.DataFrame(predictions, columns=['Predictions'])
+    df1 = pd.DataFrame(predictions, columns=['Predictions'])
+
+    df[df1.columns[0]] = df1.iloc[:, 0]
     
     # Write the processed DataFrame to a CSV in memory
     csv_output = io.StringIO()
