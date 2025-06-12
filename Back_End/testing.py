@@ -72,7 +72,7 @@ def process_file(file, model):
         return None, error
     
     df = process.process_file(df)
-    df1 = df
+    df1 = df.copy()
 
     df1 = preprocess_data(df1)
 
