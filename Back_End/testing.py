@@ -71,12 +71,12 @@ def process_file(file, model):
     if df is None:
         return None, error
     
-    df = process.process_file(df)
+    df, df1 = process.process_file(df)
 
-    df = preprocess_data(df)
+    df1 = preprocess_data(df1)
 
     model = joblib.load(model)
-    predictions = model.predict(df)
+    predictions = model.predict(df1)
     df1 = pd.DataFrame(predictions, columns=['Predictions'])
 
     df[df1.columns[0]] = df1.iloc[:, 0]
